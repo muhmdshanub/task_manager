@@ -3,9 +3,14 @@ import TaskList from '../components/TaskList'; // Component to list and manage t
 import TaskFilter from '../components/TaskFilter';
 import { Container, Box, Paper, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import TaskCreate from '../components/TaskCreate'; // Component to create tasks
+import { getTasksFromStorage, setTasksToStorage } from '../utils/taskStorage';
+
 
 const TaskScreen = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    
+    return getTasksFromStorage();
+  });
   const [filter, setFilter] = useState('all');
   const [open, setOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
@@ -20,9 +25,9 @@ const TaskScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (tasks.length > 0) {
-      // Save tasks to localStorage whenever tasks change
-      localStorage.setItem('my_task_list', JSON.stringify(tasks));
+    if (tasks !== null) {
+      // Use the utility function to save tasks to localStorage, even if tasks is empty
+      setTasksToStorage(tasks);
     }
   }, [tasks]);
 
